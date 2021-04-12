@@ -14,8 +14,8 @@ public class Part3 {
 
 
     public static void main(final String[] args) {
-        new Part3(3, 10).compare();
-        new Part3(3,10).compareSync();
+        new Part3(2, 10).compare();
+        new Part3(2,10).compareSync();
 
 
     }
