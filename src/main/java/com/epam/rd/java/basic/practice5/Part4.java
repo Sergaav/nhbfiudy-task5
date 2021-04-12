@@ -7,14 +7,14 @@ import java.util.concurrent.Executors;
 
 public class Part4 {
     public static void main(final String[] args) {
-        int[][] matrix = new int[0][];
+        long start = System.currentTimeMillis();
+        int[][] matrix = new int[4][100];
         try {
             matrix = readInput("part4.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        long start = System.currentTimeMillis();
         int totalThreads = matrix.length;
         int[] results = new int[totalThreads];
         ExecutorService executorService = Executors.newFixedThreadPool(totalThreads);
@@ -39,9 +39,17 @@ public class Part4 {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         long start1 = System.currentTimeMillis();
+        int[][] matrix1 = new int[4][100];
+        try {
+            matrix1 = readInput("part4.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         int max2 = -1;
-        for (int[] ints : matrix) {
+        for (int[] ints : matrix1) {
             int temp = findMax(ints);
             if (temp > max2) {
                 max2 = temp;
