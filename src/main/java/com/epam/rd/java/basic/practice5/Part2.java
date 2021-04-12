@@ -10,10 +10,15 @@ public class Part2 {
         System.setIn(is);
         Thread t = new Thread(() -> Spam.main(null));
         t.start();
+        if (Spam.isInterrupted){
+            t.interrupt();
+            Thread.currentThread().interrupt();
+        }
         try {
             t.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         System.setIn(consolIn);
         try {
@@ -37,6 +42,7 @@ public class Part2 {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
             return -1;
         }

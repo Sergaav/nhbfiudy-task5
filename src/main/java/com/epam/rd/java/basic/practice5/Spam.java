@@ -50,6 +50,7 @@ public class Spam {
                 try {
                     Thread.sleep(interval);
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                     break;
                 }
             }
