@@ -1,8 +1,6 @@
 package com.epam.rd.java.basic.practice5;
 
 import java.io.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Part4 {
     public static void main(final String[] args) {
@@ -13,31 +11,32 @@ public class Part4 {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        final int[] result = {0};
+        for (int i = 0; i < 4; i++) {
+            int[] finalMatrix = matrix[i];
+            Thread thread = new Thread(() -> {
+                for (int i1 = 0; i1 < 100; i1++) {
+                    if (finalMatrix[i1] > result[0]) {
 
-        int totalThreads = matrix.length;
-        int[] results = new int[totalThreads];
-        ExecutorService executorService = Executors.newFixedThreadPool(totalThreads);
-        for (int i = 0; i < totalThreads; ++i) {
-            int threadIndex = i;
-            int[][] finalMatrix = matrix;
-            executorService.submit(() -> results[threadIndex] = findMax(finalMatrix[threadIndex]));
+                        result[0] = finalMatrix[i1];
+                    }
+                }
+            });
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        System.out.println(result[0]);
         try {
             Thread.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            Thread.currentThread().interrupt();
         }
-        int max = findMax(results);
-        System.out.println(max);
         System.out.println(System.currentTimeMillis() - start);
 
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        }
 
         long start1 = System.currentTimeMillis();
         int[][] matrix1 = new int[4][100];
@@ -46,30 +45,26 @@ public class Part4 {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        int result1 = 0;
+        for (int j = 0; j < 4; j++) {
+            for (int k = 0; k < 100; k++) {
 
-        int max2 = -1;
-        for (int[] ints : matrix1) {
-            int temp = findMax(ints);
-            if (temp > max2) {
-                max2 = temp;
+                if (matrix1[j][k] > result1) {
+
+                    result1 = matrix1[j][k];
+                }
             }
         }
-        System.out.println(max2);
+        System.out.println(result1);
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println(System.currentTimeMillis() - start1);
-        executorService.shutdown();
-
 
     }
 
-    public static int findMax(int[] ints) {
-        int max = -1;
-        for (int anInt : ints) {
-            if (max == -1 || max < anInt) {
-                max = anInt;
-            }
-        }
-        return max;
-    }
 
     public static int[][] readInput(String fileName) throws IOException {
         String string;
