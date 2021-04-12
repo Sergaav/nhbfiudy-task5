@@ -16,6 +16,11 @@ public class Part2 {
             e.printStackTrace();
         }
         System.setIn(consolIn);
+        try {
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
