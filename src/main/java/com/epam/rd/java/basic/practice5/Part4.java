@@ -2,36 +2,43 @@ package com.epam.rd.java.basic.practice5;
 
 import java.io.*;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Part4 {
     public static void main(final String[] args) {
-        long start = System.currentTimeMillis();
         int[][] matrix = new int[0][];
         try {
             matrix = readInput("part4.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        long start = System.currentTimeMillis();
         int totalThreads = matrix.length;
         int[] results = new int[totalThreads];
-        CountDownLatch end = new CountDownLatch(totalThreads);
-
+        ExecutorService executorService = Executors.newFixedThreadPool(totalThreads);
         for (int i = 0; i < totalThreads; ++i) {
             int threadIndex = i;
             int[][] finalMatrix = matrix;
-            new Thread(() -> {
+            executorService.submit(() -> {
                 results[threadIndex] = findMax(finalMatrix[threadIndex]);
-                end.countDown();
-            }).start();
+            });
         }
         try {
-            end.await();
+            Thread.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         int max = findMax(results);
         System.out.println(max);
         System.out.println(System.currentTimeMillis() - start);
+
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         long start1 = System.currentTimeMillis();
         int max2 = -1;
         for (int[] ints : matrix) {
@@ -42,6 +49,7 @@ public class Part4 {
         }
         System.out.println(max2);
         System.out.println(System.currentTimeMillis() - start1);
+        executorService.shutdown();
 
 
     }
