@@ -10,22 +10,16 @@ public class Part2 {
         System.setIn(is);
         Thread t = new Thread(() -> Spam.main(null));
         t.start();
-        if (t.isInterrupted()){
-            t.interrupt();
-            Thread.currentThread().interrupt();
-        }
         try {
             t.join();
-        } catch (InterruptedException e) {
+            is.close();
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
+        } finally {
+            System.setIn(consolIn);
         }
-        System.setIn(consolIn);
-        try {
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
 

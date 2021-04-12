@@ -20,14 +20,13 @@ public class Part4 {
         for (int i = 0; i < totalThreads; ++i) {
             int threadIndex = i;
             int[][] finalMatrix = matrix;
-            executorService.submit(() -> {
-                results[threadIndex] = findMax(finalMatrix[threadIndex]);
-            });
+            executorService.submit(() -> results[threadIndex] = findMax(finalMatrix[threadIndex]));
         }
         try {
             Thread.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         int max = findMax(results);
         System.out.println(max);
@@ -37,6 +36,7 @@ public class Part4 {
             Thread.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
 
         long start1 = System.currentTimeMillis();
