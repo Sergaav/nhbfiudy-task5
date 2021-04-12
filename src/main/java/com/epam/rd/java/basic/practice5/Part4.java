@@ -34,8 +34,8 @@ public class Part4 {
         System.out.println(System.currentTimeMillis() - start);
         long start1 = System.currentTimeMillis();
         int max2 = -1;
-        for (int i = 0; i < matrix.length; ++i) {
-            int temp = findMax(matrix[i]);
+        for (int[] ints : matrix) {
+            int temp = findMax(ints);
             if (temp > max2) {
                 max2 = temp;
             }
@@ -60,7 +60,7 @@ public class Part4 {
         String string;
         int[][] out = new int[4][100];
         int i = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             while (bufferedReader.ready()) {
                 string = bufferedReader.readLine();
                 String[] temp = string.split(" ");

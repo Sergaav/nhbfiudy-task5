@@ -15,12 +15,7 @@ public class Part1 extends Thread {
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
         }
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                printThreadName();
-            }
-        });
+        Thread t1 = new Thread(Part1::printThreadName);
         t1.start();
         try {
             t1.join();

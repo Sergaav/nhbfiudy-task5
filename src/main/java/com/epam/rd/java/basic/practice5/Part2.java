@@ -8,9 +8,7 @@ public class Part2 {
         InputStream consolIn = System.in;
         InputStream is = new MyInputStream(new ByteArrayInputStream(System.lineSeparator().getBytes()));
         System.setIn(is);
-        Thread t = new Thread(() -> {
-            Spam.main(null);
-        });
+        Thread t = new Thread(() -> Spam.main(null));
         t.start();
         try {
             t.join();
@@ -29,7 +27,7 @@ public class Part2 {
         }
 
         @Override
-        public int read() throws IOException {
+        public int read() {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
