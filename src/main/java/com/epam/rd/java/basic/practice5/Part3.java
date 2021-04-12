@@ -1,8 +1,5 @@
 package com.epam.rd.java.basic.practice5;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class Part3 {
 
     private int counter;
@@ -60,21 +57,26 @@ public class Part3 {
 
 
     public void compareSync() {
-        ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
-        executorService.submit(() -> {
-            for (int i = 0; i < numberOfIterations; i++) {
-                System.out.println(counter + " = " + counter2);
-                counter++;
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
+        for (int i = 0; i < numberOfThreads; i++) {
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    while (counter < numberOfIterations) {
+                        synchronized (this) {
+                            System.out.println(counter + " = " + counter2);
+                            counter++;
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                                Thread.currentThread().interrupt();
+                            }
+                            counter2++;
+                        }
+                    }
                 }
-                counter2++;
-            }
-        });
-        executorService.shutdown();
+            }).start();
+        }
     }
 }
-
