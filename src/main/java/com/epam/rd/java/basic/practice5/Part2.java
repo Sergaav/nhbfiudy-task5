@@ -10,7 +10,7 @@ public class Part2 {
         System.setIn(is);
         Thread t = new Thread(() -> Spam.main(null));
         t.start();
-        if (Spam.isInterrupted){
+        if (t.isInterrupted()){
             t.interrupt();
             Thread.currentThread().interrupt();
         }

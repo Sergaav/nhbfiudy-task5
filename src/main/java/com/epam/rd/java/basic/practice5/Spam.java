@@ -10,7 +10,6 @@ public class Spam {
     private final String[] strings;
     private final int[] time;
 
-    public static boolean isInterrupted = false;
 
     public Spam(String[] strings, int[] time) {
         this.time = time;
@@ -63,7 +62,7 @@ public class Spam {
         int[] times = new int[]{333, 222};
         Spam spam = new Spam(messages, times);
         spam.start();
-        while (!isInterrupted) {
+        while (!Thread.currentThread().isInterrupted()) {
             int enter=0;
             try {
                 enter = bufferedReader.read();
@@ -72,7 +71,6 @@ public class Spam {
             }
             if (enter == -1) {
                 spam.stop();
-                isInterrupted = true;
                 break;
             }
         }
