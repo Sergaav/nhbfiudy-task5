@@ -1,11 +1,13 @@
 package com.epam.rd.java.basic.practice5;
 
-import java.util.stream.IntStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Part3 {
 
     private int counter;
     private int counter2;
+
     private final int numberOfThreads;
     private final int numberOfIterations;
 
@@ -16,18 +18,22 @@ public class Part3 {
 
 
     public static void main(final String[] args) {
-       Part3 part3 =  new Part3(2, 10);
-       part3.compare();
-       part3.compareSync();
+        Part3 part3 = new Part3(3, 10);
+        part3.compare();
+        part3.reset();
+        part3.compareSync();
+    }
 
-
-
-
+    public void reset() {
+        counter = 0;
+        counter2 = 0;
     }
 
     public void compare() {
-        for (int i = 0; i < numberOfThreads; ++i) {
-            Thread t = new Thread(() -> IntStream.range(0, numberOfIterations).forEach(j -> {
+        Thread[] threads = new Thread[numberOfThreads];
+        for (int i = 0; i < numberOfThreads; i++) {
+            Thread thread = new Thread(() -> {
+                while (counter < numberOfIterations) {
                     System.out.println(counter + " = " + counter2);
                     counter++;
                     try {
@@ -37,8 +43,12 @@ public class Part3 {
                         Thread.currentThread().interrupt();
                     }
                     counter2++;
-                }));
-            t.start();
+                }
+            });
+            thread.start();
+            threads[i] = thread;
+        }
+        for (Thread t : threads) {
             try {
                 t.join();
             } catch (InterruptedException e) {
@@ -48,23 +58,23 @@ public class Part3 {
         }
     }
 
+
     public void compareSync() {
-        for (int i = 0; i < numberOfThreads; ++i) {
-            new Thread(() -> {
-                for (int j = 0; j < numberOfIterations; ++j) {
-                    synchronized (this) {
-                        System.out.println(counter + " = " + counter2);
-                        ++counter;
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                            Thread.currentThread().interrupt();
-                        }
-                        ++counter2;
-                    }
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
+        executorService.submit(() -> {
+            for (int i = 0; i < numberOfIterations; i++) {
+                System.out.println(counter + " = " + counter2);
+                counter++;
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
-            }).start();
-        }
+                counter2++;
+            }
+        });
+        executorService.shutdown();
     }
 }
+
