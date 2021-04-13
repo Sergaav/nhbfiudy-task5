@@ -1,67 +1,76 @@
 package com.epam.rd.java.basic.practice5;
 
 import java.io.*;
+import java.util.concurrent.CountDownLatch;
 
 public class Part4 {
-    public static void main(final String[] args) {
-        long start = System.currentTimeMillis();
-        int[][] matrix = new int[4][100];
-        try {
-            matrix = readInput("part4.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        final int[] result = {0};
-        for (int i = 0; i < 4; i++) {
-            int[] finalMatrix = matrix[i];
-            Thread thread = new Thread(() -> {
-                for (int i1 = 0; i1 < 100; i1++) {
-                    if (finalMatrix[i1] > result[0]) {
-                        result[0] = finalMatrix[i1];
-                    }
-                }
-            });
-            thread.start();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        System.out.println(result[0]);
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(System.currentTimeMillis() - start);
 
+    public static void main(final String[] args) {
+
+        long start = System.currentTimeMillis();
+        try {
+            System.out.println(searchMaxValueMulti(readInput("part4.txt")));
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(System.currentTimeMillis()-start);
 
         long start1 = System.currentTimeMillis();
-        int[][] matrix1 = new int[4][100];
         try {
-            matrix1 = readInput("part4.txt");
+            System.out.println(searchMaxValueSingle(readInput("part4.txt")));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int result1 = 0;
-        for (int j = 0; j < 4; j++) {
-            for (int k = 0; k < 100; k++) {
+        System.out.println(System.currentTimeMillis()-start1);
 
-                if (matrix1[j][k] > result1) {
 
-                    result1 = matrix1[j][k];
+    }
+
+    public static int searchMaxValueMulti(int[][] matrix) throws InterruptedException {
+        int column = matrix.length;
+        int[] results = new int[column];
+        CountDownLatch end = new CountDownLatch(column);
+        for (int i = 0; i < column; i++) {
+            int threadIndex = i;
+            new Thread(
+                    () -> {
+                        int max = -1;
+                        for (int k = 0; k < matrix[threadIndex].length; k++) {
+                            if (max == -1 || max < matrix[threadIndex][k]) {
+                                max = matrix[threadIndex][k];
+                            }
+                        }
+                        results[threadIndex] = max;
+                        end.countDown();
+                    }
+            ).start();
+        }
+        end.await();
+        int max = results[0];
+        for (int k = 1; k < results.length; k++) {
+            if (max < results[k]) {
+                max = results[k];
+            }
+        }
+        return max;
+    }
+
+    public static int searchMaxValueSingle(int[][] matrix) {
+        int column =matrix[0].length;
+        int max = matrix[0][0];
+        for (int[] ints : matrix) {
+            for (int b = 0; b < column; b++) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (ints[b] > max) {
+                    max = ints[b];
                 }
             }
         }
-        System.out.println(result1);
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(System.currentTimeMillis() - start1);
-
+        return max;
     }
 
 
