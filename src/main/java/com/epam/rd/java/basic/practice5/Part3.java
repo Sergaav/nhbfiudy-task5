@@ -64,7 +64,7 @@ public class Part3 {
                 public void run() {
                     while (counter < numberOfIterations) {
                         synchronized (this) {
-                            System.out.println(counter + " = " + counter2);
+                            System.out.println(counter == counter2);
                             counter++;
                             try {
                                 Thread.sleep(100);
