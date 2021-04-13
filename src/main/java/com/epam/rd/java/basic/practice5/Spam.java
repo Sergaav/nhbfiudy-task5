@@ -29,6 +29,7 @@ public class Spam {
         for (Thread thread : threads) {
             thread.interrupt();
         }
+        Thread.currentThread().interrupt();
     }
 
     private static class Worker extends Thread {

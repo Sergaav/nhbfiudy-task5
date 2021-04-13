@@ -15,6 +15,7 @@ public class Part2 {
             is.close();
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
+            t.interrupt();
             Thread.currentThread().interrupt();
         } finally {
             System.setIn(consolIn);

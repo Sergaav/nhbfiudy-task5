@@ -17,7 +17,6 @@ public class Part4 {
             Thread thread = new Thread(() -> {
                 for (int i1 = 0; i1 < 100; i1++) {
                     if (finalMatrix[i1] > result[0]) {
-
                         result[0] = finalMatrix[i1];
                     }
                 }
