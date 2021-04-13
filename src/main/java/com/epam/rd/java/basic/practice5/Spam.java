@@ -43,7 +43,7 @@ public class Spam {
 
         @Override
         public void run() {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 System.out.println(string);
                 try {
                     Thread.sleep(interval);
@@ -70,6 +70,7 @@ public class Spam {
             }
             if (enter == -1) {
                 spam.stop();
+                Thread.currentThread().interrupt();
                 break;
             }
         }
