@@ -1,6 +1,7 @@
 package com.epam.rd.java.basic.practice5;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Thread.sleep;
@@ -87,7 +88,7 @@ public class Part3 {
                         System.out.println(counter == counter2);
                         counter++;
                         try {
-                            wait(100);
+                            TimeUnit.MILLISECONDS.sleep(100);
                         } catch (InterruptedException e) {
                             System.err.println(e.getMessage());
                             Thread.currentThread().interrupt();
