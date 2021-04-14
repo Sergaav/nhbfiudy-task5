@@ -2,6 +2,7 @@ package com.epam.rd.java.basic.practice5;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import static java.lang.Thread.sleep;
 
 public class Part3 {
@@ -25,12 +26,8 @@ public class Part3 {
         part3.compare();
 
         part3.reset();
-        try {
-            part3.compareSync();
-        } catch (InterruptedException e) {
-            System.err.println(e.getMessage());
-            Thread.currentThread().interrupt();
-        }
+        part3.compareSync();
+
     }
 
     public void reset() {
@@ -80,7 +77,7 @@ public class Part3 {
     }
 
 
-    public void compareSync() throws InterruptedException {
+    public void compareSync() {
         CountDownLatch end = new CountDownLatch(numberOfThreads);
         Thread[] threads = new Thread[numberOfThreads];
         for (int i = 0; i < numberOfThreads; i++) {
@@ -104,9 +101,19 @@ public class Part3 {
             thread.start();
             end.countDown();
         }
-        end.await();
+        try {
+            end.await();
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());
+            Thread.currentThread().interrupt();
+        }
         for (Thread thread : threads) {
-            thread.join();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                System.err.print(e.getMessage());
+                Thread.currentThread().interrupt();
+            }
         }
 
     }
