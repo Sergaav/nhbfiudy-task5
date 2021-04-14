@@ -12,6 +12,7 @@ public class Part4 {
             System.out.println(searchMaxValueMulti(readInput("part4.txt")));
         } catch (InterruptedException | IOException e) {
             System.err.println(e);
+            Thread.currentThread().interrupt();
         }
         System.out.println(System.currentTimeMillis()-start);
 
@@ -19,7 +20,7 @@ public class Part4 {
         try {
             System.out.println(searchMaxValueSingle(readInput("part4.txt")));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
         System.out.println(System.currentTimeMillis()-start1);
 
@@ -89,7 +90,7 @@ public class Part4 {
                 ++i;
             }
         } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
+           System.err.println(e.getMessage());
         }
         return out;
     }

@@ -27,8 +27,9 @@ public class Part2 {
         protected InputStream is;
 
         @Override
-        public int read(byte[] b, int off, int len) throws IOException {
-            return super.read(b, off, len);
+        public int read(byte[] b, int off, int len) {
+
+            return -1;
         }
 
         public MyInputStream(InputStream is) {
