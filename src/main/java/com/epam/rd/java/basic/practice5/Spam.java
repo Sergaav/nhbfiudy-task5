@@ -29,12 +29,14 @@ public class Spam {
         for (Thread thread : threads) {
             thread.interrupt();
         }
-        for (Thread thread : threads) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                System.err.println(e.getMessage());
+        for (Thread t : threads){
+            if (t.isAlive()){
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                   System.err.println(e.getMessage());
+                   Thread.currentThread().interrupt();
+                }
             }
         }
         Thread.currentThread().interrupt();
@@ -60,9 +62,6 @@ public class Spam {
                     return;
                 }
             }
-            if (isAlive()){
-                interrupt();
-            }
         }
     }
 
@@ -81,9 +80,9 @@ public class Spam {
             }
             if (enter == -1) {
                 spam.stop();
+                Thread.currentThread().interrupt();
             }
         }
-        Thread.currentThread().getThreadGroup().interrupt();
 
     }
 }

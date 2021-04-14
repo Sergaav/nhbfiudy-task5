@@ -15,8 +15,10 @@ public class Part2 {
             is.close();
         } catch (InterruptedException | IOException e) {
             System.err.println(e);
+            Thread.currentThread().interrupt();
         } finally {
             System.setIn(consolIn);
+            t.interrupt();
         }
 
     }
@@ -27,7 +29,12 @@ public class Part2 {
 
         @Override
         public int read(byte[] b, int off, int len) {
-
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                System.err.println(e.getMessage());
+                Thread.currentThread().interrupt();
+            }
             return -1;
         }
 
