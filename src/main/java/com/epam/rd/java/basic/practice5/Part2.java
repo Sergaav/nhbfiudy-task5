@@ -17,7 +17,6 @@ public class Part2 {
             System.err.println(e);
         } finally {
             System.setIn(consolIn);
-            Thread.currentThread().interrupt();
         }
 
     }

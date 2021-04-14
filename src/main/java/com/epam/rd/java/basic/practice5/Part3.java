@@ -15,13 +15,13 @@ public class Part3 {
     public Part3(int numberOfThreads, int numberOfIterations) {
         this.numberOfIterations = numberOfIterations;
         this.numberOfThreads = numberOfThreads;
-        iterations=new AtomicInteger(numberOfIterations);
+        iterations = new AtomicInteger(numberOfIterations);
     }
 
 
     public static void main(final String[] args) {
         Part3 part3 = new Part3(3, 10);
-       part3.compare();
+        part3.compare();
         part3.reset();
         part3.compareSync();
     }
@@ -29,35 +29,31 @@ public class Part3 {
     public void reset() {
         counter = 0;
         counter2 = 0;
-        iterations=new AtomicInteger(numberOfIterations);
+        iterations = new AtomicInteger(numberOfIterations);
     }
 
     public void compare() {
-        CountDownLatch end = new CountDownLatch(numberOfThreads);
         for (int i = 0; i < numberOfThreads; i++) {
-            new Thread(this::printingAndIncrementing).start();
-            end.countDown();
-        }
-        try {
-            end.await();
-        } catch (InterruptedException e) {
-            System.err.println(e.getMessage());
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    public void printingAndIncrementing(){
-        while (iterations.get() > 0) {
-            System.out.println(counter == counter2);
-            counter++;
+            Thread t = new Thread(() -> {
+                while (iterations.get() > 0) {
+                    System.out.println(counter == counter2);
+                    counter++;
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        System.err.println(e.getMessage());
+                        Thread.currentThread().interrupt();
+                    }
+                    counter2++;
+                    iterations.decrementAndGet();
+                }
+            });
+            t.start();
             try {
-                Thread.sleep(100);
+                t.join();
             } catch (InterruptedException e) {
-                System.err.println(e.getMessage());
-                Thread.currentThread().interrupt();
+                e.printStackTrace();
             }
-            counter2++;
-            iterations.decrementAndGet();
         }
     }
 
@@ -65,12 +61,29 @@ public class Part3 {
     public void compareSync() {
         CountDownLatch end = new CountDownLatch(numberOfThreads);
         for (int i = 0; i < numberOfThreads; i++) {
-            new Thread(() -> {
+            Thread thread = new Thread(() -> {
                 synchronized (this) {
-                    printingAndIncrementing();
+                    while (iterations.get() > 0) {
+                        System.out.println(counter == counter2);
+                        counter++;
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            System.err.println(e.getMessage());
+                            Thread.currentThread().interrupt();
+                        }
+                        counter2++;
+                        iterations.decrementAndGet();
+                    }
                 }
-            }).start();
+            });
+            thread.start();
             end.countDown();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         try {
             end.await();
