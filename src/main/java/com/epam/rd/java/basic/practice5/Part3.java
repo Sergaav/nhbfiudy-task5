@@ -33,19 +33,18 @@ public class Part3 {
     }
 
     public void compare() {
-        for (int i = 0; i < numberOfThreads; i++) {
+        for (int i = 0; i < numberOfThreads; ++i) {
             Thread t = new Thread(() -> {
-                while (iterations.get() > 0) {
-                    System.out.println(counter == counter2);
-                    counter++;
+                for (int j = 0; j < numberOfIterations; ++j) {
+                    System.out.println(counter + " = " + counter2);
+                    ++counter;
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
-                        System.err.println(e.getMessage());
+                        e.printStackTrace();
                         Thread.currentThread().interrupt();
                     }
-                    counter2++;
-                    iterations.decrementAndGet();
+                    ++counter2;
                 }
             });
             t.start();
@@ -53,6 +52,7 @@ public class Part3 {
                 t.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }
@@ -82,7 +82,8 @@ public class Part3 {
             try {
                 thread.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
+                thread.interrupt();
             }
         }
         try {
