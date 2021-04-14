@@ -37,6 +37,7 @@ public class Part3 {
         CountDownLatch latch = new CountDownLatch(numberOfThreads);
         for (int i = 0; i < numberOfThreads; ++i) {
             Thread t = new Thread(() -> {
+                latch.countDown();
                 for (int j = 0; j < numberOfIterations; ++j) {
                     System.out.println(counter + " = " + counter2);
                     ++counter;
@@ -56,7 +57,6 @@ public class Part3 {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
             }
-            latch.countDown();
         }
         try {
             latch.await();
@@ -64,6 +64,7 @@ public class Part3 {
             System.err.println(e.getMessage());
             Thread.currentThread().interrupt();
         }
+
     }
 
 
@@ -71,6 +72,7 @@ public class Part3 {
         CountDownLatch end = new CountDownLatch(numberOfThreads);
         for (int i = 0; i < numberOfThreads; i++) {
             Thread thread = new Thread(() -> {
+                end.countDown();
                 synchronized (this) {
                     while (iterations.get() > 0) {
                         System.out.println(counter == counter2);
@@ -86,8 +88,8 @@ public class Part3 {
                     }
                 }
             });
+
             thread.start();
-            end.countDown();
             try {
                 thread.join();
             } catch (InterruptedException e) {
