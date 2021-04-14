@@ -22,6 +22,7 @@ public class Part3 {
     public static void main(final String[] args) {
         Part3 part3 = new Part3(3, 10);
         part3.compare();
+
         part3.reset();
         part3.compareSync();
     }
@@ -30,11 +31,11 @@ public class Part3 {
         counter = 0;
         counter2 = 0;
         iterations = new AtomicInteger(numberOfIterations);
-
     }
 
     public void compare() {
         CountDownLatch latch = new CountDownLatch(numberOfThreads);
+        Thread[] threads = new Thread[numberOfThreads];
         for (int i = 0; i < numberOfThreads; ++i) {
             Thread t = new Thread(() -> {
                 latch.countDown();
@@ -50,13 +51,9 @@ public class Part3 {
                     ++counter2;
                 }
             });
+            threads[i] = t;
             t.start();
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-            }
+
         }
         try {
             latch.await();
@@ -64,6 +61,15 @@ public class Part3 {
             System.err.println(e.getMessage());
             Thread.currentThread().interrupt();
         }
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                System.err.println(e.getMessage());
+                Thread.currentThread().interrupt();
+            }
+        }
+
 
     }
 
