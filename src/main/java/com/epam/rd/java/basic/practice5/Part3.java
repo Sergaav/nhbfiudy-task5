@@ -87,7 +87,7 @@ public class Part3 {
                         System.out.println(counter == counter2);
                         counter++;
                         try {
-                            sleep(100);
+                            wait(100);
                         } catch (InterruptedException e) {
                             System.err.println(e.getMessage());
                             Thread.currentThread().interrupt();
