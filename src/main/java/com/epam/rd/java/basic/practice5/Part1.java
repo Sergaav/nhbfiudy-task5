@@ -14,6 +14,7 @@ public class Part1 extends Thread {
             t.join();
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
+            Thread.currentThread().interrupt();
         }
         Thread t1 = new Thread(Part1::printThreadName);
         t1.start();
@@ -21,6 +22,7 @@ public class Part1 extends Thread {
             t1.join();
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -31,6 +33,7 @@ public class Part1 extends Thread {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 System.err.println(e.getMessage());
+                Thread.currentThread().interrupt();
             }
         }
     }

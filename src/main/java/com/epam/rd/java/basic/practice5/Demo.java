@@ -15,7 +15,7 @@ public class Demo {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             Thread.currentThread().interrupt();
         }
         createPart4Txt();
@@ -35,7 +35,7 @@ public class Demo {
         try {
             Files.write(Paths.get("part4.txt"), stringBuilder.toString().getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
-            e.printStackTrace();
+           System.err.println(e.getMessage());
         }
     }
 

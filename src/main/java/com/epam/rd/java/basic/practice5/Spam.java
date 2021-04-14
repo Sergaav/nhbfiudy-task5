@@ -33,7 +33,8 @@ public class Spam {
             try {
                 thread.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                System.err.println(e.getMessage());
             }
         }
         Thread.currentThread().interrupt();
@@ -76,14 +77,13 @@ public class Spam {
             try {
                 enter = bufferedReader.read();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
             }
             if (enter == -1) {
                 spam.stop();
             }
         }
         Thread.currentThread().getThreadGroup().interrupt();
-      //  System.out.println(Thread.activeCount());
 
     }
 }

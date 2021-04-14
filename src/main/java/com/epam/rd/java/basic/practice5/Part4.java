@@ -11,7 +11,7 @@ public class Part4 {
         try {
             System.out.println(searchMaxValueMulti(readInput("part4.txt")));
         } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
         System.out.println(System.currentTimeMillis()-start);
 
@@ -63,7 +63,8 @@ public class Part4 {
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.err.println(e.getMessage());
+                    Thread.currentThread().interrupt();
                 }
                 if (ints[b] > max) {
                     max = ints[b];

@@ -26,6 +26,11 @@ public class Part2 {
     public static class MyInputStream extends InputStream {
         protected InputStream is;
 
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            return super.read(b, off, len);
+        }
+
         public MyInputStream(InputStream is) {
             this.is = is;
         }
@@ -35,7 +40,7 @@ public class Part2 {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
                 Thread.currentThread().interrupt();
             }
             return -1;
