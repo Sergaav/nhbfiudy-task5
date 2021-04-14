@@ -2,6 +2,7 @@ package com.epam.rd.java.basic.practice5;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
+import static java.lang.Thread.sleep;
 
 public class Part3 {
 
@@ -24,7 +25,12 @@ public class Part3 {
         part3.compare();
 
         part3.reset();
-        part3.compareSync();
+        try {
+            part3.compareSync();
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());
+            Thread.currentThread().interrupt();
+        }
     }
 
     public void reset() {
@@ -43,7 +49,7 @@ public class Part3 {
                     System.out.println(counter + " = " + counter2);
                     ++counter;
                     try {
-                        Thread.sleep(100);
+                        sleep(100);
                     } catch (InterruptedException e) {
                         System.err.println(e.getMessage());
                         Thread.currentThread().interrupt();
@@ -74,17 +80,17 @@ public class Part3 {
     }
 
 
-    public void compareSync() {
+    public void compareSync() throws InterruptedException {
         CountDownLatch end = new CountDownLatch(numberOfThreads);
+        Thread[] threads = new Thread[numberOfThreads];
         for (int i = 0; i < numberOfThreads; i++) {
             Thread thread = new Thread(() -> {
                 synchronized (this) {
-                    end.countDown();
                     while (iterations.get() > 0) {
                         System.out.println(counter == counter2);
                         counter++;
                         try {
-                            wait(100);
+                            sleep(100);
                         } catch (InterruptedException e) {
                             System.err.println(e.getMessage());
                             Thread.currentThread().interrupt();
@@ -94,19 +100,14 @@ public class Part3 {
                     }
                 }
             });
+            threads[i] = thread;
             thread.start();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                System.err.println(e.getMessage());
-                Thread.currentThread().interrupt();
-            }
+            end.countDown();
         }
-        try {
-            end.await();
-        } catch (InterruptedException e) {
-            System.err.println(e.getMessage());
-            Thread.currentThread().interrupt();
+        end.await();
+        for (Thread thread : threads) {
+            thread.join();
         }
+
     }
 }
