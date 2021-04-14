@@ -14,12 +14,12 @@ public class Part2 {
             t.join();
             is.close();
         } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+
         } finally {
             System.setIn(consolIn);
-            t.interrupt();
             Thread.currentThread().interrupt();
         }
+
     }
 
 

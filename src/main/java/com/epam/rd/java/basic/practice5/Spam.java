@@ -29,6 +29,13 @@ public class Spam {
         for (Thread thread : threads) {
             thread.interrupt();
         }
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         Thread.currentThread().interrupt();
     }
 
@@ -49,8 +56,11 @@ public class Spam {
                     Thread.sleep(interval);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    break;
+                    return;
                 }
+            }
+            if (isAlive()){
+                interrupt();
             }
         }
     }
@@ -62,7 +72,7 @@ public class Spam {
         Spam spam = new Spam(messages, times);
         spam.start();
         while (!Thread.currentThread().isInterrupted()) {
-            int enter=0;
+            int enter = 0;
             try {
                 enter = bufferedReader.read();
             } catch (IOException e) {
@@ -70,11 +80,10 @@ public class Spam {
             }
             if (enter == -1) {
                 spam.stop();
-                Thread.currentThread().interrupt();
-                break;
             }
         }
-
+        Thread.currentThread().getThreadGroup().interrupt();
+      //  System.out.println(Thread.activeCount());
 
     }
 }
