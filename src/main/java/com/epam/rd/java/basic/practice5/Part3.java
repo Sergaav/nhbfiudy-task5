@@ -35,20 +35,7 @@ public class Part3 {
     public void compare() {
         CountDownLatch end = new CountDownLatch(numberOfThreads);
         for (int i = 0; i < numberOfThreads; i++) {
-            new Thread(() -> {
-                    while (iterations.get() > 0) {
-                        System.out.println(counter == counter2);
-                        counter++;
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            System.err.println(e.getMessage());
-                            Thread.currentThread().interrupt();
-                        }
-                        counter2++;
-                        iterations.decrementAndGet();
-                    }
-            }).start();
+            new Thread(this::printingAndIncrementing).start();
             end.countDown();
         }
         try {
@@ -59,24 +46,28 @@ public class Part3 {
         }
     }
 
+    public void printingAndIncrementing(){
+        while (iterations.get() > 0) {
+            System.out.println(counter == counter2);
+            counter++;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                System.err.println(e.getMessage());
+                Thread.currentThread().interrupt();
+            }
+            counter2++;
+            iterations.decrementAndGet();
+        }
+    }
+
 
     public void compareSync() {
         CountDownLatch end = new CountDownLatch(numberOfThreads);
         for (int i = 0; i < numberOfThreads; i++) {
             new Thread(() -> {
                 synchronized (this) {
-                    while (iterations.get() > 0) {
-                        System.out.println(counter == counter2);
-                        counter++;
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            System.err.println(e.getMessage());
-                            Thread.currentThread().interrupt();
-                        }
-                        counter2++;
-                        iterations.decrementAndGet();
-                    }
+                    printingAndIncrementing();
                 }
             }).start();
             end.countDown();
