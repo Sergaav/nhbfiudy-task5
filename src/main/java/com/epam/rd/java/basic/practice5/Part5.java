@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Part5 {
@@ -14,6 +16,8 @@ public class Part5 {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        readAndPrintFile("part5.txt");
     }
 
     public static void writeFile(String fileName) throws IOException {
@@ -51,6 +55,17 @@ public class Part5 {
             }
         }
         randomAccessFile.close();
+    }
+
+    public static void readAndPrintFile(String fileName){
+        String res = null;
+        try {
+            byte[] bytes = Files.readAllBytes(Paths.get(fileName));
+            res = new String(bytes, StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+        System.out.println(res);
     }
 
 }

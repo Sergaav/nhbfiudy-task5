@@ -27,6 +27,7 @@ public class Demo {
         }
         createPart4Txt();
         Part4.main(args);
+        Part5.main(args);
 
     }
 
