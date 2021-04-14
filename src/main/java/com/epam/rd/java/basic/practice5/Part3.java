@@ -78,8 +78,8 @@ public class Part3 {
         CountDownLatch end = new CountDownLatch(numberOfThreads);
         for (int i = 0; i < numberOfThreads; i++) {
             Thread thread = new Thread(() -> {
-                end.countDown();
                 synchronized (this) {
+                    end.countDown();
                     while (iterations.get() > 0) {
                         System.out.println(counter == counter2);
                         counter++;
@@ -99,7 +99,7 @@ public class Part3 {
                 thread.join();
             } catch (InterruptedException e) {
                 System.err.println(e.getMessage());
-                thread.interrupt();
+                Thread.currentThread().interrupt();
             }
         }
         try {
