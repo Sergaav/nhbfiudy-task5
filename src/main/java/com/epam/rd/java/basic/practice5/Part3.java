@@ -88,7 +88,7 @@ public class Part3 {
                         System.out.println(counter == counter2);
                         counter++;
                         try {
-                            TimeUnit.MILLISECONDS.sleep(100);
+                            TimeUnit.MILLISECONDS.sleep(80);
                         } catch (InterruptedException e) {
                             System.err.println(e.getMessage());
                             Thread.currentThread().interrupt();
