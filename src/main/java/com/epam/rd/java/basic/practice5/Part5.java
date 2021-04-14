@@ -14,7 +14,7 @@ public class Part5 {
         try {
             writeFile("part5.txt");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
 
         readAndPrintFile("part5.txt");
@@ -36,14 +36,14 @@ public class Part5 {
                 try {
                     randomAccessFile.write(bytes);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.err.println(e.getMessage());
                 }
                 try {
                     randomAccessFile.seek((long) indexForThread.get() + bytes.length);
                     indexForThread.set(indexForThread.get() + bytes.length);
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.err.println(e.getMessage());
                 }
             });
             thread.start();
@@ -65,7 +65,7 @@ public class Part5 {
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
-        System.out.println(res);
+        System.out.print(res);
     }
 
 }

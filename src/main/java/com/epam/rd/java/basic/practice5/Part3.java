@@ -45,7 +45,7 @@ public class Part3 {
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.err.println(e.getMessage());
                         Thread.currentThread().interrupt();
                     }
                     ++counter2;
@@ -84,7 +84,7 @@ public class Part3 {
                         System.out.println(counter == counter2);
                         counter++;
                         try {
-                            Thread.sleep(90);
+                            wait(100);
                         } catch (InterruptedException e) {
                             System.err.println(e.getMessage());
                             Thread.currentThread().interrupt();
@@ -94,7 +94,6 @@ public class Part3 {
                     }
                 }
             });
-
             thread.start();
             try {
                 thread.join();
