@@ -14,7 +14,7 @@ public class Part2 {
             t.join();
             is.close();
         } catch (InterruptedException | IOException e) {
-
+            System.err.println(e);
         } finally {
             System.setIn(consolIn);
             Thread.currentThread().interrupt();
