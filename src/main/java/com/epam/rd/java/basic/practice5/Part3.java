@@ -1,9 +1,13 @@
 package com.epam.rd.java.basic.practice5;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Part3 {
 
     private int counter;
     private int counter2;
+    private AtomicInteger iterations;
 
     private final int numberOfThreads;
     private final int numberOfIterations;
@@ -11,12 +15,13 @@ public class Part3 {
     public Part3(int numberOfThreads, int numberOfIterations) {
         this.numberOfIterations = numberOfIterations;
         this.numberOfThreads = numberOfThreads;
+        iterations=new AtomicInteger(numberOfIterations);
     }
 
 
     public static void main(final String[] args) {
         Part3 part3 = new Part3(3, 10);
-        part3.compare();
+       part3.compare();
         part3.reset();
         part3.compareSync();
     }
@@ -24,59 +29,63 @@ public class Part3 {
     public void reset() {
         counter = 0;
         counter2 = 0;
+        iterations=new AtomicInteger(numberOfIterations);
     }
 
     public void compare() {
-        Thread[] threads = new Thread[numberOfThreads];
+        CountDownLatch end = new CountDownLatch(numberOfThreads);
         for (int i = 0; i < numberOfThreads; i++) {
-            Thread thread = new Thread(() -> {
-                while (counter < numberOfIterations) {
-                    System.out.println(counter + " = " + counter2);
-                    counter++;
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        Thread.currentThread().interrupt();
+            new Thread(() -> {
+                    while (iterations.get() > 0) {
+                        System.out.println(counter == counter2);
+                        counter++;
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            System.err.println(e.getMessage());
+                            Thread.currentThread().interrupt();
+                        }
+                        counter2++;
+                        iterations.decrementAndGet();
                     }
-                    counter2++;
-                }
-            });
-            thread.start();
-            threads[i] = thread;
+            }).start();
+            end.countDown();
         }
-        for (Thread t : threads) {
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-            }
+        try {
+            end.await();
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
 
     public void compareSync() {
+        CountDownLatch end = new CountDownLatch(numberOfThreads);
         for (int i = 0; i < numberOfThreads; i++) {
-            new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    while (counter < numberOfIterations) {
-                        synchronized (this) {
-                            System.out.println(counter == counter2);
-                            counter++;
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                                Thread.currentThread().interrupt();
-                            }
-                            counter2++;
+            new Thread(() -> {
+                synchronized (this) {
+                    while (iterations.get() > 0) {
+                        System.out.println(counter == counter2);
+                        counter++;
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            System.err.println(e.getMessage());
+                            Thread.currentThread().interrupt();
                         }
+                        counter2++;
+                        iterations.decrementAndGet();
                     }
                 }
             }).start();
+            end.countDown();
+        }
+        try {
+            end.await();
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 }
