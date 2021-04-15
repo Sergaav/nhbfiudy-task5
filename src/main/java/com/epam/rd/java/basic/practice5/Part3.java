@@ -1,7 +1,6 @@
 package com.epam.rd.java.basic.practice5;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
@@ -10,15 +9,12 @@ public class Part3 {
 
     private int counter;
     private int counter2;
-    private AtomicInteger iterations;
-
     private final int numberOfThreads;
     private final int numberOfIterations;
 
     public Part3(int numberOfThreads, int numberOfIterations) {
         this.numberOfIterations = numberOfIterations;
         this.numberOfThreads = numberOfThreads;
-        iterations = new AtomicInteger(numberOfIterations);
     }
 
 
@@ -34,7 +30,6 @@ public class Part3 {
     public void reset() {
         counter = 0;
         counter2 = 0;
-        iterations = new AtomicInteger(numberOfIterations);
     }
 
     public void compare() {
