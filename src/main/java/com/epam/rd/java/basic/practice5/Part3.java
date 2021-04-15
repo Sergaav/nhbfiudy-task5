@@ -85,22 +85,25 @@ public class Part3 {
         Thread[] threads = new Thread[numberOfThreads];
         for (int i = 0; i < numberOfThreads; i++) {
             Thread thread = new Thread(() -> {
-
-                while (iterations.get() > 0) {
+                while (true) {
                     lock.lock();
-                    System.out.println(counter == counter2);
-                    counter++;
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(80);
-                    } catch (InterruptedException e) {
-                        System.err.println(e.getMessage());
-                        Thread.currentThread().interrupt();
+                    if (iterations.get() > 0) {
+                        System.out.println(counter == counter2);
+                        counter++;
+                        try {
+                            TimeUnit.MILLISECONDS.sleep(80);
+                        } catch (InterruptedException e) {
+                            System.err.println(e.getMessage());
+                            Thread.currentThread().interrupt();
+                        }
+                        counter2++;
+                        iterations.decrementAndGet();
+                    }else {
+                        lock.unlock();
+                        break;
                     }
-                    counter2++;
-                    iterations.decrementAndGet();
                     lock.unlock();
                 }
-
             });
             threads[i] = thread;
             thread.start();
