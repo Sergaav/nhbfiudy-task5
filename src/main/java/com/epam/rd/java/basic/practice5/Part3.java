@@ -1,7 +1,6 @@
 package com.epam.rd.java.basic.practice5;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -88,16 +87,18 @@ public class Part3 {
                 do {
                     lock.lock();
                     if (iterations.get() > 0) {
+                        long start = System.currentTimeMillis();
                         System.out.println(counter == counter2);
                         counter++;
                         try {
-                            TimeUnit.MILLISECONDS.sleep(100);
+                            Thread.sleep(98);
                         } catch (InterruptedException e) {
                             System.err.println(e.getMessage());
                             Thread.currentThread().interrupt();
                         }
                         counter2++;
                         iterations.decrementAndGet();
+                        System.out.println(System.currentTimeMillis() - start);
                     }
                     lock.unlock();
                 } while (iterations.get() != 0);
