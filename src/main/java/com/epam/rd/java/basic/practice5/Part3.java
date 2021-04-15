@@ -87,7 +87,6 @@ public class Part3 {
                 do {
                     lock.lock();
                     if (iterations.get() > 0) {
-                        long start = System.currentTimeMillis();
                         System.out.println(counter == counter2);
                         counter++;
                         try {
@@ -98,7 +97,6 @@ public class Part3 {
                         }
                         counter2++;
                         iterations.decrementAndGet();
-                        System.out.println(System.currentTimeMillis() - start);
                     }
                     lock.unlock();
                 } while (iterations.get() != 0);
