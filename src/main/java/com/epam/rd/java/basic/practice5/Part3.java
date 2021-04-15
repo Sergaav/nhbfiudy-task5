@@ -3,6 +3,7 @@ package com.epam.rd.java.basic.practice5;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
 
@@ -80,23 +81,24 @@ public class Part3 {
 
     public void compareSync() {
         CountDownLatch end = new CountDownLatch(numberOfThreads);
+        ReentrantLock lock = new ReentrantLock();
         Thread[] threads = new Thread[numberOfThreads];
         for (int i = 0; i < numberOfThreads; i++) {
             Thread thread = new Thread(() -> {
-                synchronized (this) {
-                    while (iterations.get() > 0) {
-                        System.out.println(counter == counter2);
-                        counter++;
-                        try {
-                            TimeUnit.MILLISECONDS.sleep(80);
-                        } catch (InterruptedException e) {
-                            System.err.println(e.getMessage());
-                            Thread.currentThread().interrupt();
-                        }
-                        counter2++;
-                        iterations.decrementAndGet();
+                lock.lock();
+                while (iterations.get() > 0) {
+                    System.out.println(counter == counter2);
+                    counter++;
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(80);
+                    } catch (InterruptedException e) {
+                        System.err.println(e.getMessage());
+                        Thread.currentThread().interrupt();
                     }
+                    counter2++;
+                    iterations.decrementAndGet();
                 }
+                lock.unlock();
             });
             threads[i] = thread;
             thread.start();
