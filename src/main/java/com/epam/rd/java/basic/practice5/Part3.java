@@ -84,9 +84,8 @@ public class Part3 {
         Thread[] threads = new Thread[numberOfThreads];
         for (int i = 0; i < numberOfThreads; i++) {
             Thread thread = new Thread(() -> {
-                do {
                     lock.lock();
-                    if (iterations.get() > 0) {
+                    for (int j=0;j<numberOfIterations;j++) {
                         System.out.println(counter == counter2);
                         counter++;
                         try {
@@ -96,10 +95,8 @@ public class Part3 {
                             Thread.currentThread().interrupt();
                         }
                         counter2++;
-                        iterations.decrementAndGet();
                     }
                     lock.unlock();
-                } while (iterations.get() != 0);
             });
             threads[i] = thread;
             thread.start();
