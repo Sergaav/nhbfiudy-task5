@@ -1,4 +1,4 @@
-package com.epam.rd.java.basic.practice5;
+package com.savaz.rd.java.basic.practice5;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.ReentrantLock;

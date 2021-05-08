@@ -1,4 +1,4 @@
-package com.epam.rd.java.basic.practice5;
+package com.savaz.rd.java.basic.practice5;
 
 import java.io.BufferedReader;
 import java.io.IOException;

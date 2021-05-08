@@ -1,4 +1,4 @@
-package com.epam.rd.java.basic.practice5;
+package com.savaz.rd.java.basic.practice5;
 
 public class Part1 extends Thread {
 
